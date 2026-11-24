@@ -1,0 +1,202 @@
+{
+  "documentType": "enterprise-data-product-requirements-companion",
+  "description": "Synthetic, vendor-neutral companion to the ODPS draft. No organization, initiative or deployment is represented.",
+  "productID": "example-discovery-cmdb-coverage",
+  "architectureStatus": "synthetic_draft",
+  "informationDemand": {
+    "capability": "Asset Information Management",
+    "useCase": "Know What We Have",
+    "decision": "Does the CMDB provide required representation for asset class X in environment Y, and which assets require action?",
+    "consumers": [
+      "CMDB data steward (illustrative)",
+      "Asset class owner (illustrative)",
+      "Information consumer (illustrative)"
+    ],
+    "outputs": [
+      "Coverage by approved asset class and environment",
+      "Eligible population counts and representation counts",
+      "Unrepresented and unresolved identity worklists",
+      "Provenance and measurement as-of time",
+      "Approved scope and exception context"
+    ]
+  },
+  "populationAndScope": {
+    "assetClassFilter": {
+      "source": "Approved asset class taxonomy (to be defined)",
+      "allowedValues": "TBD: governed in-scope asset classes and subtype mapping"
+    },
+    "environmentFilter": {
+      "source": "Approved environment taxonomy (to be defined)",
+      "allowedValues": "TBD: generic organization-defined environment categories"
+    },
+    "obligation": "Distinguish discovery participation from required CMDB representation; alternative authorized evidence may be necessary for populations without automated discovery.",
+    "scopeRulesToApprove": [
+      "In-scope asset classes and populations",
+      "Environments and authority boundaries",
+      "Rules for decommissioned/transient/unmanaged assets",
+      "Treatment of inaccessible environments and approved exclusions",
+      "Who approves coverage eligibility and evidence sufficiency"
+    ]
+  },
+  "canonicalEntities": [
+    {
+      "name": "ManagedAsset",
+      "grain": "One distinct physical or logical technology asset after authorized identity reconciliation",
+      "fields": [
+        "canonical_asset_id",
+        "asset_class",
+        "asset_subtype",
+        "environment_id",
+        "lifecycle_state"
+      ]
+    },
+    {
+      "name": "DiscoveryObservation",
+      "grain": "One observed source record at a point in time",
+      "fields": [
+        "source_system",
+        "source_record_id",
+        "observed_at",
+        "asset_identifier_set",
+        "observation_status"
+      ]
+    },
+    {
+      "name": "CMDBRepresentation",
+      "grain": "One CI representation of an asset, with CI class and status",
+      "fields": [
+        "ci_id",
+        "ci_class",
+        "ci_status",
+        "cmdb_updated_at",
+        "canonical_asset_id_if_matched"
+      ]
+    },
+    {
+      "name": "PopulationMembership",
+      "grain": "One asset membership assertion within an approved population and period",
+      "fields": [
+        "population_id",
+        "canonical_asset_id",
+        "eligible",
+        "evidence_type",
+        "asserting_authority",
+        "effective_at"
+      ]
+    },
+    {
+      "name": "IdentityReconciliation",
+      "grain": "One match or identity-resolution decision with evidence",
+      "fields": [
+        "candidate_source_ids",
+        "ci_id_if_any",
+        "resolution_state",
+        "confidence",
+        "decision_evidence",
+        "review_owner"
+      ]
+    },
+    {
+      "name": "CoverageMeasurement",
+      "grain": "One metric result per scope, asset class, environment, and as-of time",
+      "fields": [
+        "population_id",
+        "asset_class",
+        "environment_id",
+        "measurement_as_of",
+        "eligible_asset_count",
+        "represented_asset_count",
+        "coverage_percent",
+        "unresolved_count"
+      ]
+    }
+  ],
+  "proposedClassification": {
+    "represented": "Eligible population member reconciled to an applicable CMDB CI",
+    "unrepresented": "Eligible population member with no verified applicable CMDB representation",
+    "discovery_only": "Asset discovered but not resolved to an eligible CMDB CI; may be outside scope or require review",
+    "cmdb_only": "CI exists without current discovery evidence; not necessarily invalid, especially for isolated/controlled populations",
+    "unresolved_identity": "Match ambiguous, conflicting, or below the approved confidence threshold",
+    "excluded": "Explicitly approved out-of-scope population or record with supporting rationale"
+  },
+  "metricDefinition": {
+    "metricID": "EXAMPLE_CMDB_POPULATION_COVERAGE",
+    "formulaProposed": "100 * represented_eligible_distinct_assets / approved_eligible_distinct_population",
+    "numeratorProposed": "Count distinct eligible managed assets with verified required CMDB representation at measurement time",
+    "denominatorProposed": "Count distinct eligible assets in a governed population baseline, based on approved discovery and/or controlled population evidence",
+    "denominatorWarning": "The union of discovery and CMDB records is an observed universe, not proof of the total required population. Assets absent from both need independent population evidence if true coverage is claimed.",
+    "grains": [
+      "asset_class",
+      "environment",
+      "population",
+      "as_of_time"
+    ],
+    "targets": "TBD, no objective or tolerance assumed",
+    "unknowns": [
+      "Approval authority for denominator",
+      "Acceptable CMDB CI status and identity matching",
+      "Handling stale discoveries and CMDB-only records",
+      "Reconciliation thresholds and exception policy",
+      "Definition and comparability of existing CMDB reported coverage"
+    ]
+  },
+  "lineageAndSources": {
+    "cmdb": "ServiceNow CMDB (example source; no real connection implied)",
+    "discovery": [
+      "Generic discovery-source observations; exact sources intentionally unspecified"
+    ],
+    "independentPopulationSources": "An independent approved population baseline may be needed to claim complete coverage; none is supplied in this example.",
+    "analyticsPlatform": "Implementation platform is unspecified and not mandated by the product definition.",
+    "expectedTraceability": [
+      "source_record_id",
+      "source_system",
+      "observed_at",
+      "match_decision",
+      "ci_id",
+      "population_evidence",
+      "measurement_run_id"
+    ]
+  },
+  "platformHandoff": {
+    "architectureToPlatform": [
+      "approved scope/class/environment taxonomies",
+      "entity and attribute definitions",
+      "identity and deduplication rules",
+      "approved metric formula and business conditions",
+      "quality targets and exceptions",
+      "access and consumption requirements"
+    ],
+    "platformToArchitecture": [
+      "physical model and delivered interface",
+      "source-to-target mapping and transformation lineage",
+      "runtime freshness and quality results",
+      "reconciliation differences from ServiceNow",
+      "unresolved or quarantined records",
+      "version and operational ownership"
+    ],
+    "platformDecisionsPending": [
+      "consumption interface and hosting platform",
+      "supported quality and lineage controls",
+      "update cadence and evidence retention",
+      "access restrictions and identity boundary"
+    ]
+  },
+  "rolesToConfirm": [
+    "CMDB data owner (illustrative)",
+    "Asset population authority (illustrative)",
+    "Product owner (illustrative)",
+    "Data steward (illustrative)",
+    "Data architect (illustrative)",
+    "Source integration engineer (illustrative)",
+    "Implementation engineer (illustrative)",
+    "Quality assurance owner (illustrative)"
+  ],
+  "nextDecisions": [
+    "Confirm whether coverage is one product or a defined metric within Managed Technology Inventory",
+    "Approve population and eligibility logic with domain owners",
+    "Reconcile ServiceNow and downstream reporting metric semantics",
+    "Confirm data product handoff details with platform engineers",
+    "Decide product owner and minimum deployment acceptance criteria"
+  ],
+  "publicExampleNotice": "All entries are synthetic. No organization, project, real asset population, platform configuration, actual identifiers, or approved metrics."
+}

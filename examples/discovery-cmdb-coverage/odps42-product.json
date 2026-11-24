@@ -1,0 +1,87 @@
+{
+  "schema": "https://opendataproducts.org/v4.2/schema/odps.json",
+  "version": "4.2",
+  "product": {
+    "details": {
+      "en": {
+        "name": "Discovery-to-CMDB Population Coverage",
+        "productID": "example-discovery-cmdb-coverage",
+        "visibility": "public",
+        "status": "draft",
+        "type": "decision support",
+        "productVersion": "0.1.0",
+        "valueProposition": "Assess whether eligible observed assets are represented in ServiceNow CMDB by asset class and environment, using transparent reconciliation evidence.",
+        "description": "Synthetic candidate product comparing generic discovery observations with ServiceNow CMDB configuration items. Observations are deduplicated to distinct assets and reconciled against CMDB representation. This example contains no actual environment data or approved metrics, thresholds, or implementation.",
+        "versionNotes": "Public generic example only; no affiliation, deployed service or approved metric implied.",
+        "useCases": [
+          {
+            "useCase": {
+              "useCaseTitle": "Know what is represented",
+              "useCaseDescription": "Identify eligible observed technology assets that have corresponding ServiceNow CMDB configuration items."
+            }
+          },
+          {
+            "useCase": {
+              "useCaseTitle": "Assess coverage by asset class and environment",
+              "useCaseDescription": "Filter eligible distinct assets by class and environment, including unresolved identities and exclusions."
+            }
+          }
+        ]
+      }
+    },
+    "dataQuality": {
+      "declarative": {
+        "default": {
+          "displaytitle": {
+            "en": "Population coverage quality requirements"
+          },
+          "description": {
+            "en": "Illustrative quality dimensions only. Population scope, authoritative denominator, rules and thresholds require approval."
+          },
+          "dimensions": [
+            {
+              "dimension": "coverage",
+              "displaytitle": {
+                "en": "CMDB population representation coverage"
+              },
+              "description": {
+                "en": "Distinct eligible assets with confirmed qualifying CMDB representation divided by eligible distinct assets in an approved population baseline. Discovery does not automatically establish a complete population denominator."
+              },
+              "unit": "percentage"
+            },
+            {
+              "dimension": "uniqueness",
+              "displaytitle": {
+                "en": "Resolved identity uniqueness"
+              },
+              "description": {
+                "en": "Avoid double-counting distinct assets when multiple discovery tools report the same technology."
+              },
+              "unit": "percentage"
+            },
+            {
+              "dimension": "timeliness",
+              "displaytitle": {
+                "en": "Evidence timeliness"
+              },
+              "description": {
+                "en": "Measure age of discovery, CMDB and population-baseline observations against agreed freshness rules."
+              },
+              "unit": "percentage"
+            },
+            {
+              "dimension": "consistency",
+              "displaytitle": {
+                "en": "Cross-platform metric consistency"
+              },
+              "description": {
+                "en": "Independent implementations of the same metric should reconcile to a shared scope, formula, time and evidence definitions."
+              },
+              "unit": "percentage"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
